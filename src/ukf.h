@@ -14,7 +14,7 @@ class UKF {
 public:
 
   ///* initially set to false, set to true in first call of ProcessMeasurement
-  bool is_initialized_;
+  bool is_init;
 
   ///* if this is false, laser measurements will be ignored (except for init)
   bool use_laser_;
@@ -35,27 +35,27 @@ public:
   long long time_us_;
 
   ///* Process noise standard deviation longitudinal acceleration in m/s^2
-  double std_a_;
+  float std_a_;
 
   ///* Process noise standard deviation yaw acceleration in rad/s^2
-  double std_yawdd_;
+  float std_yawdd_;
 
   ///* Laser measurement noise standard deviation position1 in m
-  double std_laspx_;
+  float std_laspx_;
 
   ///* Laser measurement noise standard deviation position2 in m
-  double std_laspy_;
+  float std_laspy_;
 
   ///* Radar measurement noise standard deviation radius in m
-  double std_radr_;
+  float std_radr_;
 
   ///* Radar measurement noise standard deviation angle in rad
-  double std_radphi_;
+  float std_radphi_;
 
   ///* Radar measurement noise standard deviation radius change in m/s
-  double std_radrd_ ;
+  float std_radrd_ ;
 
-  ///* Weights of sigma points
+  ///* weights_ of sigma points
   VectorXd weights_;
 
   ///* State dimension
@@ -65,8 +65,25 @@ public:
   int n_aug_;
 
   ///* Sigma point spreading parameter
-  double lambda_;
+  float lambda_;
+  
+  //number of sigma points 
+  int n_sig_;
 
+  //predicted sigma points matrix
+  MatrixXd Xsig_pred;
+
+  ///* the current NIS for radar
+  float NIS_radar_;
+
+  ///* the current NIS for laser
+  float NIS_laser_;
+  
+  ///* Radar measurement noise covariance matrix
+  MatrixXd R_radar_;
+  
+  ///* Lidar measurement noise covariance matrix
+  MatrixXd R_lidar_;
 
   /**
    * Constructor
@@ -89,7 +106,7 @@ public:
    * matrix
    * @param delta_t Time between k and k+1 in s
    */
-  void Prediction(double delta_t);
+  void Prediction(float delta_t);
 
   /**
    * Updates the state and the state covariance matrix using a laser measurement
